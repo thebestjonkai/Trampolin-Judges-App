@@ -31,6 +31,7 @@
   --radius: 16px;
   --radius-sm: 12px;
   --finish-height: 7rem;
+  --action-height: 4.5rem;         /* comfortable tap target in the footers */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -116,12 +117,13 @@ body {
 .btn-library,
 .btn-delete,
 .btn-reset {
+  min-height: var(--action-height);
   font-size: clamp(1rem, 2.2vmin, 1.25rem);
   color: var(--color-text);
   background: transparent;
   border: 1px solid var(--table-border);
   border-radius: var(--radius-sm);
-  padding: .8em 2em;
+  padding: .8em 1.2em;
 }
 
 .btn-add:active,
@@ -133,11 +135,12 @@ body {
 
 /* Primary action of the library: on to the next routine */
 .btn-next {
+  min-height: var(--action-height);
   font-size: clamp(1.05rem, 2.6vmin, 1.4rem);
   font-weight: 700;
   background: var(--btn-green);
   border-radius: var(--radius-sm);
-  padding: .8em 2.4em;
+  padding: .8em 1.2em;
 }
 
 /* Destroys data — marked as such */
@@ -352,22 +355,6 @@ body {
   border-left: 1px solid var(--table-border);
 }
 
-/* Colour values like the buttons: 0-1 green, 2-3 yellow, 4-5 red.
-   Any other number stays plain white. */
-.result-table td[data-value="0"],
-.result-table td[data-value="1"] { color: var(--val-green); }
-
-.result-table td[data-value="2"],
-.result-table td[data-value="3"] { color: var(--val-yellow); }
-
-.result-table td[data-value="4"],
-.result-table td[data-value="5"] { color: var(--val-red); }
-
-.result-table td[data-value="10"] {
-  color: #fff;
-  background: var(--btn-darkred);
-}
-
 /* L is not a running number — clearly set apart */
 .result-table thead th:nth-child(11) {
   background: var(--table-head-accent-bg);
@@ -415,6 +402,24 @@ body {
   box-shadow: inset 3px 0 0 var(--color-text);
 }
 
+/* Colour values like the buttons: 0-1 green, 2-3 yellow, 4-5 red, 10 dark red.
+   Any other number stays plain white. These come last on purpose: the row
+   states above match just as specifically and would otherwise win. */
+.result-table tbody tr td[data-value="0"],
+.result-table tbody tr td[data-value="1"] { color: var(--val-green); }
+
+.result-table tbody tr td[data-value="2"],
+.result-table tbody tr td[data-value="3"] { color: var(--val-yellow); }
+
+.result-table tbody tr td[data-value="4"],
+.result-table tbody tr td[data-value="5"] { color: var(--val-red); }
+
+.result-table tbody tr td[data-value="10"] {
+  color: #fff;
+  background: var(--btn-darkred);
+  opacity: 1;
+}
+
 .result-empty td {
   padding: 2em .5em;
   color: var(--color-muted);
@@ -423,20 +428,11 @@ body {
   letter-spacing: .04em;
 }
 
-/* Reset left, Next Routine centred, Delete last Routine right */
+/* Four equal buttons across the full width of the page */
 .result-actions {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: var(--gap);
-}
-
-.result-actions > :first-child { justify-self: start; }
-.result-actions > :last-child  { justify-self: end; }
-
-.action-center {
-  display: flex;
-  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: stretch;
   gap: var(--gap);
 }
 

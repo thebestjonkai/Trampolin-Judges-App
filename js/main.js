@@ -235,13 +235,19 @@ document.addEventListener('DOMContentLoaded', () => {
     showView(viewResult);
   }
 
-  /** Add Routine: append an empty routine and jump into its first cell. */
+  /** Add Routine: append an empty routine as the last row and focus it. */
   function addRoutine() {
+    // A running routine is drawn below the saved ones and would otherwise end
+    // up underneath the new row, so it joins the library first.
+    if (showsCurrent && hasValues(values)) saved.push(values.slice());
+    clearCurrent();
+
     saved.push([]);
     persistSaved();
-    renderTable(showsCurrent);
+    renderTable(false);
+
     const rows = resultBody.querySelectorAll('tr');
-    const newRow = rows[saved.length - 1];
+    const newRow = rows[rows.length - 1];
     if (newRow) newRow.querySelector('.cell-input').focus();
   }
 
@@ -270,6 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /** Reset: clear the whole library and return to the start screen. */
   function reset() {
+    const hasData = saved.length > 0 || hasValues(values);
+    if (hasData && !window.confirm(
+      'Delete all routines? This cannot be undone.'
+    )) return;
+
     saved = [];
     persistSaved();
     clearCurrent();
