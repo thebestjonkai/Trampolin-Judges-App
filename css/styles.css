@@ -1,0 +1,226 @@
+/* Durchgehend Dark Mode — unabhängig von der Systemeinstellung */
+:root {
+  color-scheme: dark;
+
+  --color-bg: #14171a;
+  --color-text: #e9ecef;
+
+  /* Button-Farben nach Wert (auf dunklem Grund leicht gedämpft) */
+  --btn-green: #2b8f48;
+  --btn-yellow: #c2930b;
+  --btn-red: #c23a3a;
+  --btn-finish: #2b3138;
+
+  --table-border: #3a4149;
+  --table-head-bg: #1e2328;
+
+  --gap: 0.75rem;
+  --finish-height: 5rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;               /* kein Scrollen/Gummiband auf dem iPad */
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;     /* kein Doppeltipp-Zoom */
+}
+
+/* Vollflächiges Layout: Zahlenraster oben, Finish-Button unten */
+.page {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr var(--finish-height);
+  gap: var(--gap);
+  padding: var(--gap);
+  padding-top: max(var(--gap), env(safe-area-inset-top));
+  padding-bottom: max(var(--gap), env(safe-area-inset-bottom));
+  padding-left: max(var(--gap), env(safe-area-inset-left));
+  padding-right: max(var(--gap), env(safe-area-inset-right));
+}
+
+/* --- Ansicht 1: Start ------------------------------------------ */
+
+.page-start {
+  grid-template-rows: 1fr;
+  place-items: center;
+}
+
+.btn-start {
+  width: 100%;
+  height: 100%;
+  font: inherit;
+  font-size: clamp(2rem, 9vmin, 5rem);
+  font-weight: 700;
+  color: #fff;
+  background: var(--btn-green);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: filter .12s ease, transform .12s ease;
+}
+
+.btn-start:active {
+  filter: brightness(.88);
+  transform: scale(.99);
+}
+
+.btn-start:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: -6px;
+}
+
+/* Querformat: 3 Spalten x 2 Reihen */
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--gap);
+  min-height: 0;
+}
+
+/* Hochformat: 2 Spalten x 3 Reihen */
+@media (orientation: portrait) {
+  .buttons {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+.btn {
+  width: 100%;
+  height: 100%;
+  font: inherit;
+  font-size: clamp(3rem, 14vmin, 9rem);
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: filter .12s ease, transform .12s ease;
+}
+
+/* 0-1 grün, 2-3 gelb, 4-5 rot */
+.btn[data-value="0"],
+.btn[data-value="1"] { background: var(--btn-green); }
+
+.btn[data-value="2"],
+.btn[data-value="3"] { background: var(--btn-yellow); }
+
+.btn[data-value="4"],
+.btn[data-value="5"] { background: var(--btn-red); }
+
+/* 12 Werte erfasst: leicht ausgegraut, keine Eingabe mehr möglich */
+.btn.is-dimmed {
+  opacity: .45;
+  filter: saturate(.5);
+  cursor: default;
+}
+
+.btn-finish {
+  font: inherit;
+  font-size: clamp(1.25rem, 3.5vmin, 2rem);
+  font-weight: 600;
+  color: #fff;
+  background: var(--btn-finish);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: filter .12s ease, transform .12s ease;
+}
+
+.btn:active,
+.btn-finish:active {
+  filter: brightness(.88);
+  transform: scale(.985);
+}
+
+.btn:focus-visible,
+.btn-finish:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: -6px;
+}
+
+/* --- Ansicht 3: Auswertung ------------------------------------- */
+
+/* display:grid der .page würde [hidden] sonst überstimmen */
+[hidden] { display: none !important; }
+
+.page-result {
+  grid-template-rows: 1fr auto;
+}
+
+.table-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow: auto;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;               /* 12 gleich breite Spalten */
+  font-size: clamp(1rem, 3.5vmin, 2.25rem);
+}
+
+.result-table th,
+.result-table td {
+  border: 1px solid var(--table-border);
+  text-align: center;
+  padding: .6em .2em;
+  width: calc(100% / 12);
+}
+
+.result-table th {
+  background: var(--table-head-bg);
+  font-weight: 600;
+}
+
+.result-table td {
+  font-weight: 700;
+  height: 2.2em;
+}
+
+.result-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-reset {
+  font: inherit;
+  font-size: clamp(1rem, 2.2vmin, 1.25rem);
+  font-weight: 600;
+  color: #fff;
+  background: var(--btn-finish);
+  border: none;
+  border-radius: 12px;
+  padding: .8em 2em;
+  cursor: pointer;
+  transition: filter .12s ease, transform .12s ease;
+}
+
+.btn-reset:active {
+  filter: brightness(.88);
+  transform: scale(.985);
+}
+
+.btn-reset:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
