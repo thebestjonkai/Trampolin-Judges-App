@@ -10,8 +10,21 @@
 </head>
 <body>
 
+  <!-- View 0: Lock — guards the start screen -->
+  <div class="page page-lock" id="view-lock">
+    <h1 class="app-title">Kari</h1>
+
+    <form class="lock-card" id="lock-form">
+      <label class="lock-label" for="password">Password</label>
+      <input type="password" id="password" class="lock-input"
+             autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button type="submit" class="btn-unlock">Unlock</button>
+      <p class="lock-error" id="lock-error">Wrong password</p>
+    </form>
+  </div>
+
   <!-- View 1: Start -->
-  <div class="page page-start" id="view-start">
+  <div class="page page-start" id="view-start" hidden>
     <h1 class="app-title">Kari</h1>
     <button type="button" class="btn-start" id="start">Start Routine</button>
     <button type="button" class="btn-library" id="open-library">Library</button>
@@ -57,6 +70,7 @@
     </div>
 
     <div class="result-actions">
+      <button type="button" class="btn-lock" id="lock">Lock</button>
       <button type="button" class="btn-reset" id="reset">Reset</button>
       <button type="button" class="btn-add" id="add-routine">Add Routine</button>
       <button type="button" class="btn-next" id="next">Next Routine</button>

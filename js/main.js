@@ -2,11 +2,20 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // ---------------------------------------------------------------
+  // Password for the start screen. Change it right here — it is the
+  // only place it appears. Any length works, 10 characters is just
+  // what was generated. Note that it only keeps casual hands out:
+  // anyone who opens the page source can read it.
+  // ---------------------------------------------------------------
+  const APP_PASSWORD = 'MaLnsJGwhL';
+
   const MAX_CLICKS = 11;           // value columns: S1-S10, L
   const COLUMNS = MAX_CLICKS + 2;  // plus "Total" and "E:"
   const STORAGE_KEY = 'kari.exercises';
   const MAX_DIGITS = 3;            // guard against runaway input in a narrow cell
 
+  const viewLock   = document.getElementById('view-lock');
   const viewStart  = document.getElementById('view-start');
   const viewInput  = document.getElementById('view-input');
   const viewResult = document.getElementById('view-result');
@@ -217,7 +226,39 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Views and actions --------------------------------------------
 
   function showView(view) {
-    [viewStart, viewInput, viewResult].forEach((v) => { v.hidden = v !== view; });
+    [viewLock, viewStart, viewInput, viewResult]
+      .forEach((v) => { v.hidden = v !== view; });
+  }
+
+  const passwordField = document.getElementById('password');
+  const lockError = document.getElementById('lock-error');
+
+  /** The start screen is only reachable through the password prompt. */
+  function lock() {
+    passwordField.value = '';
+    lockError.classList.remove('is-visible');
+    showView(viewLock);
+    passwordField.focus();
+  }
+
+  function unlock(event) {
+    event.preventDefault();
+    if (passwordField.value !== APP_PASSWORD) {
+      lockError.classList.add('is-visible');
+      passwordField.select();
+      return;
+    }
+    passwordField.value = '';
+    lockError.classList.remove('is-visible');
+    showView(viewStart);
+  }
+
+  /** Lock button: leaves the library untouched, just asks for the password. */
+  function lockApp() {
+    if (!window.confirm(
+      'Lock the app? The password is needed to get back in.'
+    )) return;
+    lock();
   }
 
   function start() {
@@ -276,9 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /** Reset: clear the whole library and return to the start screen. */
   function reset() {
-    const hasData = saved.length > 0 || hasValues(values);
-    if (hasData && !window.confirm(
-      'Delete all routines? This cannot be undone.'
+    if (!window.confirm(
+      'Reset? This deletes all routines and returns to the start screen.'
     )) return;
 
     saved = [];
@@ -291,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => record(Number(btn.dataset.value)));
   });
 
+  document.getElementById('lock-form').addEventListener('submit', unlock);
   document.getElementById('start').addEventListener('click', start);
   document.getElementById('open-library').addEventListener('click', openLibrary);
   document.getElementById('finish').addEventListener('click', showResult);
@@ -298,5 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('next').addEventListener('click', nextRoutine);
   deleteBtn.addEventListener('click', deleteLast);
   document.getElementById('reset').addEventListener('click', reset);
+  document.getElementById('lock').addEventListener('click', lockApp);
 
 });
