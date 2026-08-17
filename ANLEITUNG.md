@@ -151,8 +151,8 @@ Alles löscht ausschließlich **Reset**. Einzelne Routinen verschwinden mit
 Alle elf Werte sind erfasst. Tippe auf **Finish Routine**.
 
 **Ein Wert in der Tabelle ist weiß statt farbig.**
-Es ist eine Zahl, die die Buttons nicht erzeugen, z. B. ein Vertipper — 7 statt
-5. Zelle antippen und korrigieren.
+Es ist eine Zahl, die die Buttons nicht erzeugen, z. B. ein Vertipper —
+eine 7 statt einer 5. Zelle antippen und korrigieren.
 
 **Die Bibliothek ist leer, obwohl Routinen aufgenommen wurden.**
 Entweder wurde **Reset** benutzt, oder du bist auf einem anderen Gerät oder in

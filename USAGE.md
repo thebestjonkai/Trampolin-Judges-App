@@ -42,12 +42,14 @@ The colours tell you the range at a glance: 0 and 1 are green, 2 and 3 yellow,
 4 and 5 red, the 10 dark red.
 
 **Tap one button per element, in order.** The first tap fills `S1`, the second
-`S2`, and so on up to `S10`, with the eleventh tap filling `L`.
+`S2`, and so on up to `S10`; the eleventh tap fills `L` for the landing.
 
 A routine holds **11 values**. Once all eleven are recorded, the buttons turn
 pale and stop responding — that is the signal that the routine is complete.
 
 When you are done, tap **Finish Routine**. The routine appears in the library.
+**Finish Routine** can also be tapped earlier, for instance when a routine was
+broken off.
 
 > **There is no undo while recording.** A wrong tap is corrected afterwards in
 > the library, where every value can be typed over. See section 5.
@@ -61,9 +63,9 @@ Each row is one routine, oldest at the top. The columns are:
 | Column | Meaning |
 | --- | --- |
 | **S1**–**S10** | the ten elements, in the order you tapped them |
-| **L** | the eleventh value |
+| **L** | the dismount and landing |
 | **Total** | all values of that row added up |
-| **E:** | the result of `10 − (Total × 0.1)`, with one decimal |
+| **E:** | the finished execution score of one judge |
 
 **Total** and **E:** are calculated for you and update themselves.
 

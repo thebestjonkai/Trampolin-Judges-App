@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewStart  = document.getElementById('view-start');
   const viewInput  = document.getElementById('view-input');
   const viewResult = document.getElementById('view-result');
+  const viewGuide  = document.getElementById('view-guide');
   const numberBtns = Array.from(document.querySelectorAll('.btn'));
   const resultBody = document.getElementById('result-body');
   const deleteBtn  = document.getElementById('delete-last');
@@ -226,8 +227,45 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Views and actions --------------------------------------------
 
   function showView(view) {
-    [viewLock, viewStart, viewInput, viewResult]
+    [viewLock, viewStart, viewInput, viewResult, viewGuide]
       .forEach((v) => { v.hidden = v !== view; });
+  }
+
+  // --- Guide ---------------------------------------------------------
+
+  const GUIDES = { en: 'USAGE.md', de: 'ANLEITUNG.md' };
+  const guideFrame = document.querySelector('.guide-frame');
+  const guideBody = document.getElementById('guide-body');
+  const langBtns = Array.from(document.querySelectorAll('.btn-lang'));
+  const guideCache = {};
+
+  async function showGuide(lang) {
+    langBtns.forEach((btn) => {
+      btn.classList.toggle('is-active', btn.dataset.lang === lang);
+    });
+
+    if (!guideCache[lang]) {
+      guideBody.innerHTML = '<p class="guide-note">Loading…</p>';
+      try {
+        const response = await fetch(GUIDES[lang], { cache: 'no-cache' });
+        if (!response.ok) throw new Error(String(response.status));
+        guideCache[lang] = window.renderMarkdown(await response.text());
+      } catch {
+        // Happens when the page is opened straight from disk (file://)
+        guideCache[lang] =
+          `<p class="guide-note">The guide could not be loaded. ` +
+          `Open <code>${GUIDES[lang]}</code> in the project folder instead.</p>`;
+      }
+    }
+
+    guideBody.innerHTML = guideCache[lang];
+    guideFrame.scrollTop = 0;
+  }
+
+  function openGuide() {
+    showView(viewGuide);
+    const active = langBtns.find((btn) => btn.classList.contains('is-active'));
+    showGuide(active ? active.dataset.lang : 'en');
   }
 
   const passwordField = document.getElementById('password');
@@ -331,8 +369,24 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => record(Number(btn.dataset.value)));
   });
 
+  langBtns.forEach((btn) => {
+    btn.addEventListener('click', () => showGuide(btn.dataset.lang));
+  });
+
+  // The guides link to each other — keep that inside the app
+  guideBody.addEventListener('click', (event) => {
+    const link = event.target.closest('a');
+    if (!link) return;
+    const lang = Object.keys(GUIDES).find((key) => GUIDES[key] === link.getAttribute('href'));
+    if (!lang) return;
+    event.preventDefault();
+    showGuide(lang);
+  });
+
   document.getElementById('lock-form').addEventListener('submit', unlock);
   document.getElementById('start').addEventListener('click', start);
+  document.getElementById('open-guide').addEventListener('click', openGuide);
+  document.getElementById('guide-back').addEventListener('click', () => showView(viewStart));
   document.getElementById('open-library').addEventListener('click', openLibrary);
   document.getElementById('finish').addEventListener('click', showResult);
   document.getElementById('add-routine').addEventListener('click', addRoutine);

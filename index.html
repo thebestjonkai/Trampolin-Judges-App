@@ -27,7 +27,10 @@
   <div class="page page-start" id="view-start" hidden>
     <h1 class="app-title">Kari</h1>
     <button type="button" class="btn-start" id="start">Start Routine</button>
-    <button type="button" class="btn-library" id="open-library">Library</button>
+    <div class="start-actions">
+      <button type="button" class="btn-library" id="open-library">Library</button>
+      <button type="button" class="btn-guide" id="open-guide">Guide</button>
+    </div>
   </div>
 
   <!-- View 2: Input -->
@@ -79,6 +82,24 @@
 
   </div>
 
+  <!-- View 4: Guide — rendered from USAGE.md / ANLEITUNG.md -->
+  <div class="page page-guide" id="view-guide" hidden>
+
+    <header class="guide-bar">
+      <button type="button" class="btn-guide-back" id="guide-back">Back</button>
+      <div class="guide-langs" role="group" aria-label="Guide language">
+        <button type="button" class="btn-lang is-active" data-lang="en">English</button>
+        <button type="button" class="btn-lang" data-lang="de">Deutsch</button>
+      </div>
+    </header>
+
+    <div class="guide-frame">
+      <article class="guide-body" id="guide-body"></article>
+    </div>
+
+  </div>
+
+  <script src="js/markdown.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
