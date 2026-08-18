@@ -46,13 +46,19 @@ der zweite `S2`, und so weiter bis `S10`; der elfte Tipp füllt `L` für die Lan
 
 Über den Buttons steht, welcher Wert als Nächstes erfasst wird: *Judging 1st
 Skill*, *Judging 2nd Skill*, und so weiter bis *Judging Landing*. Sind alle elf
-Werte erfasst, steht dort *Routine complete*. **Finish Routine** zählt genauso
+Werte erfasst, steht dort *Routine complete*.
+
+Darunter läuft die **Leiste**: elf Felder, `S1` bis `S10` und `L`. Jeder Tipp
+setzt seinen Wert in das nächste Feld, in der Farbe des gedrückten Buttons, und
+das Feld danach ist als nächstes umrandet. Du kannst also nachsehen, was erfasst
+ist, ohne den Screen zu verlassen. Der gedrückte Button sinkt zusätzlich ein und
+blitzt kurz auf — das ist die Bestätigung, dass der Tipp gezählt hat. **Finish Routine** zählt genauso
 mit — *Finish Routine after 3 Skills* — und lässt die Zählung weg, sobald die
 Routine voll ist.
 
 Eine Übung fasst **11 Werte**. Sobald alle elf erfasst sind, werden die
-Buttons blass und reagieren nicht mehr — das ist das Zeichen, dass die Routine
-vollständig ist.
+Buttons blass und reagieren nicht mehr, und **Finish Routine** leuchtet türkis
+auf — das ist das Zeichen, dass die Routine vollständig ist.
 
 Zum Abschluss auf **Finish Routine** tippen. Die Routine erscheint in der
 Bibliothek. Finish Routine kann auch davor schon angeklickt werden bspw. bei abgebrochenen Übungen

@@ -58,7 +58,18 @@ Six large buttons, `0`–`5`, coloured by severity — 0/1 green, 2/3 yellow,
 
 Every tap appends one value, in tap order. A routine holds **11 values**: the
 ten elements `S1`–`S10` plus `L`. Once eleven are recorded the buttons grey out
-and stop responding. **Finish Routine** shows the result in the library.
+and stop responding, while **Finish Routine** switches to its `is-ready` state —
+teal, ringed, one short pop — so the only live control is also the brightest.
+**Finish Routine** shows the result in the library.
+
+Under the heading sits the **track**: one slot per value, `S1`–`S10` and `L`,
+built from `MAX_CLICKS` so it follows the routine length automatically. Filled
+slots take the same severity colour as the keys; the next one is ringed.
+
+Every button also carries an `.is-pressed` class driven by `pointerdown` /
+`pointerup`, because iOS Safari does not apply `:active` to buttons — without it
+there was no visible press feedback on iPhone or iPad at all. The keys add a
+one-shot `.just-tapped` flash on the tap that actually recorded a value.
 
 A heading above the grid names the value the next tap records — driven by
 `SKILL_NAMES` in `js/main.js`, which lists the eleven column names in order and

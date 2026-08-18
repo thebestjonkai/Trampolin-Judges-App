@@ -25,7 +25,10 @@
 
   <!-- View 1: Start -->
   <div class="page page-start" id="view-start" hidden>
-    <h1 class="app-title">Kari</h1>
+    <div class="start-head">
+      <h1 class="app-title">Kari</h1>
+      <p class="start-meta" id="start-meta"></p>
+    </div>
     <button type="button" class="btn-start" id="start">Start Routine</button>
     <div class="start-actions">
       <button type="button" class="btn-library" id="open-library">Library</button>
@@ -36,7 +39,12 @@
   <!-- View 2: Input -->
   <div class="page page-input" id="view-input" hidden>
 
-    <h1 class="input-title" id="input-title">Judging 1st Skill</h1>
+    <header class="input-head">
+      <h1 class="input-title" id="input-title">
+        <span class="input-title-lead">Judging</span><span class="input-title-skill" id="input-skill">1st Skill</span>
+      </h1>
+      <ol class="track" id="track" aria-label="Values recorded so far"></ol>
+    </header>
 
     <main class="buttons" id="buttons">
       <button type="button" class="btn" data-value="0">0</button>
@@ -77,7 +85,7 @@
     <div class="result-actions">
       <button type="button" class="btn-lock" id="lock">Lock</button>
       <button type="button" class="btn-reset" id="reset">Reset</button>
-      <button type="button" class="btn-add" id="add-routine">Add Routine</button>
+      <button type="button" class="btn-add" id="add-routine">Add Routine Manually</button>
       <button type="button" class="btn-next" id="next">Next Routine</button>
       <button type="button" class="btn-delete" id="delete-last">Delete last Routine</button>
     </div>

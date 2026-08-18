@@ -4,24 +4,35 @@
 :root {
   color-scheme: dark;
 
-  --color-bg: #14171a;
-  --color-surface: #1a1e23;
-  --color-text: #e9ecef;
-  --color-muted: #98a2ac;
+  --color-bg: #0e1114;
+  --color-surface: #161a1f;
+  --color-elevated: #1d232a;
+  --color-text: #eef1f4;
+  --color-muted: #8b959f;
+
+  /* Digits are data: one face for every numeric surface, tabular so
+     columns line up. ui-monospace is SF Mono on the iPad. */
+  --font-num: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Button colours by value (slightly muted on the dark ground) */
-  --btn-green: #2b8f48;
-  --btn-yellow: #c2930b;
-  --btn-red: #c23a3a;
+  --btn-green: #2f9e51;
+  --btn-yellow: #c99a0c;
+  --btn-red: #cc4040;
   --btn-darkred: #7a1717;
   --btn-finish: #2b3138;
+  /* Routine complete: the only colour outside the 0-5/10 severity scale,
+     so "ready to submit" can never be mistaken for a score */
+  --btn-finish-ready: #0d8b7b;
+  --btn-finish-ready-text: #2dd4bf;   /* the same accent, legible as text */
+  --btn-finish-ring: rgba(45, 212, 191, .5);
+  --btn-finish-glow: rgba(13, 139, 123, .75);
 
   /* Lighter variants for text on the dark ground */
   --val-green: #5cc97d;
   --val-yellow: #e0b830;
   --val-red: #e86a6a;
 
-  --table-border: #2f363d;
+  --table-border: #272e35;
   --table-head-bg: #232a31;
   --table-head-accent-bg: #303942;
   --table-head-line: #57626d;
@@ -52,6 +63,7 @@ body {
   -webkit-user-select: none;
   user-select: none;
   touch-action: manipulation;     /* no double-tap zoom */
+  -webkit-tap-highlight-color: transparent;   /* replaced by .is-pressed */
 }
 
 /* Full-bleed layout: number grid on top, action bar at the bottom */
@@ -100,6 +112,29 @@ body {
 .btn-reset:active {
   filter: brightness(.88);
   transform: scale(.985);
+}
+
+/* iOS Safari withholds :active from buttons, so pointer events mirror it onto
+   .is-pressed. Every rule below is the touch counterpart of an :active rule. */
+.is-pressed {
+  filter: brightness(.88);
+  transform: scale(.985);
+}
+
+.btn-add.is-pressed,
+.btn-lock.is-pressed,
+.btn-library.is-pressed,
+.btn-guide.is-pressed,
+.btn-guide-back.is-pressed,
+.btn-delete.is-pressed,
+.btn-reset.is-pressed {
+  background: var(--color-surface);
+}
+
+.btn-delete:disabled.is-pressed {
+  filter: none;
+  transform: none;
+  background: transparent;
 }
 
 .btn:focus-visible,
@@ -283,12 +318,29 @@ body {
   color: var(--color-muted);
 }
 
+.start-head {
+  display: grid;
+  justify-items: center;
+  gap: .3rem;
+}
+
+/* Says where you stand before you start — the library is otherwise a
+   screen away, and an empty one is worth knowing about up front. */
+.start-meta {
+  margin: 0;
+  font-family: var(--font-num);
+  font-size: clamp(.7rem, 1.7vmin, .9rem);
+  letter-spacing: .06em;
+  color: var(--color-muted);
+}
+
 .btn-start {
   width: 100%;
   height: 100%;
   font-size: clamp(2rem, 9vmin, 5rem);
   font-weight: 700;
   background: var(--btn-green);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07);
 }
 
 .start-actions {
@@ -447,17 +499,114 @@ body {
 
 /* --- View 2: Input ---------------------------------------------- */
 
-/* Heading on top, number grid, action bar */
+/* Header block, number grid, action bar */
 .page-input {
   grid-template-rows: auto 1fr var(--finish-height);
+}
+
+.input-head {
+  display: grid;
+  gap: .5rem;
 }
 
 /* Says which value the next tap records */
 .input-title {
   margin: 0;
-  font-size: clamp(1.5rem, 4.5vmin, 2.5rem);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: .5em;
+  font-size: clamp(1.35rem, 4vmin, 2.25rem);
   font-weight: 700;
   text-align: center;
+}
+
+/* "Judging" is the constant, the skill is the news — set apart, not repeated
+   at the same weight every time the number changes. */
+.input-title-lead {
+  font-size: .5em;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.input-title.is-complete .input-title-lead { display: none; }
+.input-title.is-complete .input-title-skill { color: var(--btn-finish-ready-text); }
+
+/* --- The routine track ------------------------------------------
+   Eleven slots, filling left to right. It is the receipt for every tap:
+   which value landed, in which slot, and which slot is up next. */
+/* One framed strip, divided by hairlines — a readout, not eleven chips.
+   The 1px gaps let the strip's own background through as the dividers. */
+.track {
+  display: grid;
+  grid-template-columns: repeat(var(--track-count, 11), 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--table-border);
+  border: 1px solid var(--table-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.track-slot {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: .15rem;
+  padding: .45rem .1rem .5rem;
+  background: var(--color-surface);
+  transition: background .16s ease;
+}
+
+.track-label {
+  font-size: clamp(.5rem, 1.35vmin, .72rem);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.track-value {
+  font-family: var(--font-num);
+  font-size: clamp(.95rem, 2.8vmin, 1.6rem);
+  font-weight: 700;
+  line-height: 1;
+  min-height: 1em;              /* holds its height while still empty */
+}
+
+/* The slot the next tap will fill */
+.track-slot.is-next {
+  background: var(--color-elevated);
+  box-shadow: inset 0 0 0 2px var(--color-text);
+}
+
+.track-slot.is-filled .track-label { color: rgba(255, 255, 255, .7); }
+.track-slot.is-filled .track-value { color: #fff; }
+
+/* Same severity scale as the keys — after .is-filled so these win */
+.track-slot[data-value="0"],
+.track-slot[data-value="1"] { background: var(--btn-green); }
+
+.track-slot[data-value="2"],
+.track-slot[data-value="3"] { background: var(--btn-yellow); }
+
+.track-slot[data-value="4"],
+.track-slot[data-value="5"] { background: var(--btn-red); }
+
+.track-slot[data-value="10"] { background: var(--btn-darkred); }
+
+/* The tap landing in its slot — the confirmation, right where the eye is not */
+.track-slot.just-filled {
+  animation: slot-in .24s cubic-bezier(.2, .9, .3, 1.25);
+}
+
+@keyframes slot-in {
+  from { transform: scale(.55); opacity: .3; }
+  to   { transform: scale(1); opacity: 1; }
 }
 
 /* Landscape: 3 columns x 2 rows */
@@ -477,6 +626,12 @@ body {
   gap: var(--gap);
 }
 
+@media (max-height: 470px) {
+  .input-head { gap: .35rem; }
+  .input-title { font-size: clamp(1rem, 3.2vmin, 1.4rem); }
+  .track-slot { padding: .25rem .1rem .3rem; }
+}
+
 /* Portrait: 2 columns x 3 rows */
 @media (orientation: portrait) {
   .buttons {
@@ -492,9 +647,31 @@ body {
 .btn {
   width: 100%;
   height: 100%;
+  font-family: var(--font-num);
   font-size: clamp(3rem, 14vmin, 9rem);
   font-weight: 700;
   line-height: 1;
+  /* Hairline edge: the keys read as separate objects on the dark panel */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07);
+  transition: filter .09s ease, transform .09s ease, box-shadow .09s ease;
+}
+
+/* Held down: sinks, brightens, gains a rim. The whole point is that this is
+   unmistakable on a tablet held at arm's length. */
+.btn.is-pressed {
+  transform: scale(.94);
+  filter: brightness(1.32) saturate(1.05);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .45);
+}
+
+/* Fires on the tap that actually recorded a value */
+.btn.just-tapped {
+  animation: key-flash .3s ease-out;
+}
+
+@keyframes key-flash {
+  from { box-shadow: inset 0 0 0 100px rgba(255, 255, 255, .34); }
+  to   { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); }
 }
 
 /* 0-1 green, 2-3 yellow, 4-5 red */
@@ -526,6 +703,26 @@ body {
   line-height: 1.2;
   font-size: clamp(1.25rem, 3.5vmin, 2rem);
   background: var(--btn-finish);
+  /* restates the shared transition so the ready state can fade in too */
+  transition: filter .12s ease, transform .12s ease,
+              background-color .2s ease, box-shadow .2s ease;
+}
+
+/* All eleven values in: every other button is dimmed and dead, so this one
+   stops being the quietest thing on screen and becomes the only lit one. */
+.btn-finish.is-ready {
+  background: var(--btn-finish-ready);
+  box-shadow:
+    0 0 0 3px var(--btn-finish-ring),
+    0 14px 32px -12px var(--btn-finish-glow);
+  animation: finish-ready .32s ease-out;
+}
+
+/* One pop at the moment the routine fills up — not a loop that nags */
+@keyframes finish-ready {
+  from { transform: scale(.96); box-shadow: 0 0 0 0 transparent; }
+  60%  { transform: scale(1.02); }
+  to   { transform: scale(1); }
 }
 
 /* --- View 3: Library -------------------------------------------- */
@@ -539,8 +736,11 @@ body {
 
 .result-title {
   margin: 0;
-  font-size: clamp(1.5rem, 4.5vmin, 2.5rem);
+  font-size: clamp(1.1rem, 2.6vmin, 1.5rem);
   font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
   text-align: center;
 }
 
@@ -619,6 +819,7 @@ body {
 .result-table td {
   padding: .5em .2em;
   height: 2.2em;
+  font-family: var(--font-num);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   border-top: 1px solid var(--table-border);
@@ -724,4 +925,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+  .btn-finish.is-ready,
+  .btn.just-tapped,
+  .track-slot.just-filled { animation: none; }
 }

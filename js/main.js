@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // what was generated. Note that it only keeps casual hands out:
   // anyone who opens the page source can read it.
   // ---------------------------------------------------------------
-  const APP_PASSWORD = 'MaLnsJGwhL';
+  const APP_PASSWORD = 'a';
 
   const MAX_CLICKS = 11;           // value columns: S1-S10, L
   const COLUMNS = MAX_CLICKS + 2;  // plus "Total" and "E:"
@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultBody = document.getElementById('result-body');
   const deleteBtn  = document.getElementById('delete-last');
   const inputTitle = document.getElementById('input-title');
+  const inputSkill = document.getElementById('input-skill');
+  const track      = document.getElementById('track');
   const finishBtn  = document.getElementById('finish');
 
   /**
@@ -79,17 +81,68 @@ document.addEventListener('DOMContentLoaded', () => {
     'Landing',
   ];
 
+  /** Slot names on the track, matching the table header: S1-S10, then L. */
+  const SLOT_LABELS = Array.from({ length: MAX_CLICKS }, (_, i) =>
+    i === MAX_CLICKS - 1 ? 'L' : `S${i + 1}`);
+
+  /** Builds the empty track once; only its contents change afterwards. */
+  function buildTrack() {
+    track.style.setProperty('--track-count', String(MAX_CLICKS));
+    track.replaceChildren(...SLOT_LABELS.map((label) => {
+      const slot = document.createElement('li');
+      slot.className = 'track-slot';
+
+      const name = document.createElement('span');
+      name.className = 'track-label';
+      name.textContent = label;
+
+      const value = document.createElement('span');
+      value.className = 'track-value';
+
+      slot.append(name, value);
+      return slot;
+    }));
+  }
+
+  function updateTrack() {
+    Array.from(track.children).forEach((slot, i) => {
+      const value = values[i];
+      const filled = isFilled(value);
+      slot.querySelector('.track-value').textContent = filled ? String(value) : '';
+      slot.classList.toggle('is-filled', filled);
+      slot.classList.toggle('is-next', i === values.length);
+      if (filled) slot.dataset.value = String(value);
+      else delete slot.dataset.value;
+    });
+  }
+
+  /** Replays the drop-in so a repeat of the same value still reads as a tap. */
+  function popSlot(index) {
+    const slot = track.children[index];
+    if (!slot) return;
+    slot.classList.remove('just-filled');
+    void slot.offsetWidth;
+    slot.classList.add('just-filled');
+  }
+
+  track.addEventListener('animationend', (event) => {
+    event.target.classList.remove('just-filled');
+  });
+
   /** Names the value the next tap will record — S1-S10, then L. */
   function updateInputTitle() {
     const next = values.length;
-    inputTitle.textContent = next < SKILL_NAMES.length
-      ? `Judging ${SKILL_NAMES[next]}`
-      : 'Routine complete';
+    const complete = next >= SKILL_NAMES.length;
+    inputSkill.textContent = complete ? 'Routine complete' : SKILL_NAMES[next];
+    inputTitle.classList.toggle('is-complete', complete);
+    updateTrack();
 
     // The landing is not a skill, so a full routine drops the count entirely.
-    finishBtn.textContent = next >= MAX_CLICKS
+    const full = next >= MAX_CLICKS;
+    finishBtn.textContent = full
       ? 'Finish Routine'
       : `Finish Routine after ${next} ${next === 1 ? 'Skill' : 'Skills'}`;
+    finishBtn.classList.toggle('is-ready', full);
   }
 
   /** Lock and dim the buttons once all values have been recorded. */
@@ -102,10 +155,20 @@ document.addEventListener('DOMContentLoaded', () => {
     updateInputTitle();
   }
 
-  function record(value) {
+  function record(value, button) {
     if (values.length >= MAX_CLICKS) return;
     values.push(value);
     updateButtonState();
+    popSlot(values.length - 1);
+    flash(button);
+  }
+
+  /** One-shot confirmation on the key that was just tapped. */
+  function flash(button) {
+    if (!button) return;
+    button.classList.remove('just-tapped');
+    void button.offsetWidth;
+    button.classList.add('just-tapped');
   }
 
   // --- Library table ------------------------------------------------
@@ -249,9 +312,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Views and actions --------------------------------------------
 
+  const startMeta = document.getElementById('start-meta');
+
   function showView(view) {
     [viewLock, viewStart, viewInput, viewResult, viewGuide]
       .forEach((v) => { v.hidden = v !== view; });
+    if (view === viewStart) updateStartMeta();
+  }
+
+  function updateStartMeta() {
+    const count = saved.length;
+    startMeta.textContent = count === 0
+      ? 'Library empty'
+      : `${count} ${count === 1 ? 'routine' : 'routines'} in the library`;
   }
 
   // --- Guide ---------------------------------------------------------
@@ -389,7 +462,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   numberBtns.forEach((btn) => {
-    btn.addEventListener('click', () => record(Number(btn.dataset.value)));
+    btn.addEventListener('click', () => record(Number(btn.dataset.value), btn));
+    btn.addEventListener('animationend', () => btn.classList.remove('just-tapped'));
+  });
+
+  // iOS Safari does not apply :active to buttons, so every button gets its
+  // pressed state from pointer events instead. Same look, but it actually
+  // shows up on the iPad.
+  const pressOff = (event) => event.currentTarget.classList.remove('is-pressed');
+  document.querySelectorAll('button').forEach((button) => {
+    button.addEventListener('pointerdown', () => {
+      if (!button.disabled) button.classList.add('is-pressed');
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach((type) => {
+      button.addEventListener(type, pressOff);
+    });
   });
 
   langBtns.forEach((btn) => {
@@ -418,7 +505,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('reset').addEventListener('click', reset);
   document.getElementById('lock').addEventListener('click', lockApp);
 
-  // Heading and Finish Routine label both start from an empty routine
+  // Track, heading and Finish Routine label all start from an empty routine
+  buildTrack();
   updateButtonState();
 
 });

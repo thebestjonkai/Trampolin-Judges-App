@@ -46,12 +46,19 @@ The colours tell you the range at a glance: 0 and 1 are green, 2 and 3 yellow,
 
 A heading above the buttons names the value your next tap records: *Judging
 1st Skill*, *Judging 2nd Skill*, and so on up to *Judging Landing*. Once all
-eleven are in, it reads *Routine complete*. **Finish Routine** counts along in
+eleven are in, it reads *Routine complete*.
+
+Under it runs the **track**: eleven slots, `S1` to `S10` and `L`. Every tap drops
+its value into the next slot in the colour of the button you pressed, and the
+slot after it is outlined as the one coming up. So you can check what you have
+recorded without leaving the screen. The key you press also sinks and flashes,
+which is your confirmation that the tap counted. **Finish Routine** counts along in
 the same way — *Finish Routine after 3 Skills* — and drops the count once the
 routine is full.
 
 A routine holds **11 values**. Once all eleven are recorded, the buttons turn
-pale and stop responding — that is the signal that the routine is complete.
+pale and stop responding, and **Finish Routine** lights up in teal — that is the
+signal that the routine is complete.
 
 When you are done, tap **Finish Routine**. The routine appears in the library.
 **Finish Routine** can also be tapped earlier, for instance when a routine was
