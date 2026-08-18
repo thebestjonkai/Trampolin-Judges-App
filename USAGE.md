@@ -44,6 +44,12 @@ The colours tell you the range at a glance: 0 and 1 are green, 2 and 3 yellow,
 **Tap one button per element, in order.** The first tap fills `S1`, the second
 `S2`, and so on up to `S10`; the eleventh tap fills `L` for the landing.
 
+A heading above the buttons names the value your next tap records: *Judging
+1st Skill*, *Judging 2nd Skill*, and so on up to *Judging Landing*. Once all
+eleven are in, it reads *Routine complete*. **Finish Routine** counts along in
+the same way — *Finish Routine after 3 Skills* — and drops the count once the
+routine is full.
+
 A routine holds **11 values**. Once all eleven are recorded, the buttons turn
 pale and stop responding — that is the signal that the routine is complete.
 

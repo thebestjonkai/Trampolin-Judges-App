@@ -1,4 +1,6 @@
 /* Always dark mode — independent of the system settings */
+/*/plugin install frontend-design@claude-plugins-official*/
+
 :root {
   color-scheme: dark;
 
@@ -445,6 +447,19 @@ body {
 
 /* --- View 2: Input ---------------------------------------------- */
 
+/* Heading on top, number grid, action bar */
+.page-input {
+  grid-template-rows: auto 1fr var(--finish-height);
+}
+
+/* Says which value the next tap records */
+.input-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4.5vmin, 2.5rem);
+  font-weight: 700;
+  text-align: center;
+}
+
 /* Landscape: 3 columns x 2 rows */
 .buttons {
   display: grid;
@@ -506,6 +521,9 @@ body {
 }
 
 .btn-finish {
+  /* The label carries the skill count, so it needs room to wrap */
+  padding: 0 .75em;
+  line-height: 1.2;
   font-size: clamp(1.25rem, 3.5vmin, 2rem);
   background: var(--btn-finish);
 }

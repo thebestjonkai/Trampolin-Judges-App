@@ -44,6 +44,12 @@ Die Farben zeigen den Bereich auf einen Blick: 0 und 1 sind grün, 2 und 3 gelb,
 **Tippe pro Element einen Button, der Reihe nach.** Der erste Tipp füllt `S1`,
 der zweite `S2`, und so weiter bis `S10`; der elfte Tipp füllt `L` für die Landung.
 
+Über den Buttons steht, welcher Wert als Nächstes erfasst wird: *Judging 1st
+Skill*, *Judging 2nd Skill*, und so weiter bis *Judging Landing*. Sind alle elf
+Werte erfasst, steht dort *Routine complete*. **Finish Routine** zählt genauso
+mit — *Finish Routine after 3 Skills* — und lässt die Zählung weg, sobald die
+Routine voll ist.
+
 Eine Übung fasst **11 Werte**. Sobald alle elf erfasst sind, werden die
 Buttons blass und reagieren nicht mehr — das ist das Zeichen, dass die Routine
 vollständig ist.
@@ -70,12 +76,12 @@ Jede Zeile ist eine Routine, die älteste steht oben. Die Spalten:
 
 **Total** und **E:** werden automatisch berechnet und aktualisieren sich selbst.
 
-Die Werte behalten ihre Farben von den Buttons, sodass sich eine Routine auf
+Die Werte behalten ihre Farben von den Buttons, sodass sich eine Übung auf
 einen Blick lesen lässt. Eine Zahl, die die Buttons nicht erzeugen können — also
 etwas anderes als 0–5 und 10, zum Beispiel eine von Hand eingetragene 7 —
 erscheint schlicht weiß.
 
-Die gerade abgeschlossene Routine steht unten und hat links einen Balken; der
+Die gerade abgeschlossene Übung steht unten und hat links einen Balken; der
 kennzeichnet sie als noch nicht gespeichert. Überschrift und Spaltentitel
 bleiben beim Scrollen durch eine lange Liste sichtbar.
 
@@ -100,6 +106,7 @@ Praktisch beim Tippen:
 | **Umschalt + Enter** | vorherige Zelle |
 | **↑ / ↓** | gleiche Spalte, eine Routine nach oben oder unten |
 | **Tab** | nächste Zelle |
+Einfaches Tippen auf die Spalte eines Sprünges geht auch
 
 Erlaubt ist jede ganze Zahl mit bis zu drei Stellen — du bist nicht auf die
 Werte der Buttons beschränkt. Zellen dürfen auch leer bleiben; eine leere Zelle
@@ -151,8 +158,8 @@ Alles löscht ausschließlich **Reset**. Einzelne Routinen verschwinden mit
 Alle elf Werte sind erfasst. Tippe auf **Finish Routine**.
 
 **Ein Wert in der Tabelle ist weiß statt farbig.**
-Es ist eine Zahl, die die Buttons nicht erzeugen, z. B. ein Vertipper —
-eine 7 statt einer 5. Zelle antippen und korrigieren.
+Es ist eine Zahl, die die Buttons nicht erzeugen, z. B. ein Vertipper — 7 statt
+5. Zelle antippen und korrigieren.
 
 **Die Bibliothek ist leer, obwohl Routinen aufgenommen wurden.**
 Entweder wurde **Reset** benutzt, oder du bist auf einem anderen Gerät oder in

@@ -60,6 +60,11 @@ Every tap appends one value, in tap order. A routine holds **11 values**: the
 ten elements `S1`–`S10` plus `L`. Once eleven are recorded the buttons grey out
 and stop responding. **Finish Routine** shows the result in the library.
 
+A heading above the grid names the value the next tap records — driven by
+`SKILL_NAMES` in `js/main.js`, which lists the eleven column names in order and
+falls back to *Routine complete* when the routine is full. The same function
+relabels **Finish Routine** with the number of skills recorded so far.
+
 ### 4. Library
 
 One row per routine, thirteen columns:

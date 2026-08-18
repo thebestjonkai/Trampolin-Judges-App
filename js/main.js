@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const numberBtns = Array.from(document.querySelectorAll('.btn'));
   const resultBody = document.getElementById('result-body');
   const deleteBtn  = document.getElementById('delete-last');
+  const inputTitle = document.getElementById('input-title');
+  const finishBtn  = document.getElementById('finish');
 
   /**
    * A routine is an array of at most MAX_CLICKS entries. Tapping appends to the
@@ -70,6 +72,26 @@ document.addEventListener('DOMContentLoaded', () => {
     return rowValues.some(isFilled);
   }
 
+  /** Column names as they read in the heading above the buttons. */
+  const SKILL_NAMES = [
+    '1st Skill', '2nd Skill', '3rd Skill', '4th Skill', '5th Skill',
+    '6th Skill', '7th Skill', '8th Skill', '9th Skill', '10th Skill',
+    'Landing',
+  ];
+
+  /** Names the value the next tap will record — S1-S10, then L. */
+  function updateInputTitle() {
+    const next = values.length;
+    inputTitle.textContent = next < SKILL_NAMES.length
+      ? `Judging ${SKILL_NAMES[next]}`
+      : 'Routine complete';
+
+    // The landing is not a skill, so a full routine drops the count entirely.
+    finishBtn.textContent = next >= MAX_CLICKS
+      ? 'Finish Routine'
+      : `Finish Routine after ${next} ${next === 1 ? 'Skill' : 'Skills'}`;
+  }
+
   /** Lock and dim the buttons once all values have been recorded. */
   function updateButtonState() {
     const full = values.length >= MAX_CLICKS;
@@ -77,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled = full;
       btn.classList.toggle('is-dimmed', full);
     });
+    updateInputTitle();
   }
 
   function record(value) {
@@ -388,11 +411,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('open-guide').addEventListener('click', openGuide);
   document.getElementById('guide-back').addEventListener('click', () => showView(viewStart));
   document.getElementById('open-library').addEventListener('click', openLibrary);
-  document.getElementById('finish').addEventListener('click', showResult);
+  finishBtn.addEventListener('click', showResult);
   document.getElementById('add-routine').addEventListener('click', addRoutine);
   document.getElementById('next').addEventListener('click', nextRoutine);
   deleteBtn.addEventListener('click', deleteLast);
   document.getElementById('reset').addEventListener('click', reset);
   document.getElementById('lock').addEventListener('click', lockApp);
+
+  // Heading and Finish Routine label both start from an empty routine
+  updateButtonState();
 
 });
